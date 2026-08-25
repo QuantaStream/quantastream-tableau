@@ -1,0 +1,17 @@
+# Local Tableau artifacts
+*.twb
+*.twbx
+*.hyper
+*.taco
+
+# Logs and local captures
+*.log
+captures/local/
+tdvt/output/
+
+# OS/editor noise
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
