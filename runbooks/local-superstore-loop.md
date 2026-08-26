@@ -51,3 +51,23 @@ This loop proves:
 
 It does not prove Tableau compatibility by itself. The next step is still to
 connect Tableau Desktop and capture its actual generated SQL.
+
+## 5. Optional Engine Replay Suites
+
+When a QuantaStream engine repo is available next to this repository, run the
+curated Tableau replay suites against a TPC-H-loaded QS endpoint:
+
+```bash
+scripts/run_engine_tableau_suites.sh
+```
+
+For direct cluster testing:
+
+```bash
+ENGINE=inabox-direct CONSUL_ADDR=127.0.0.1:8500 \
+  scripts/run_engine_tableau_suites.sh
+```
+
+These suites live in the engine repo and cover Tableau metadata, worksheet, and
+custom-SQL wrapper behavior. They complement the Superstore loop; they do not
+replace a real Tableau Desktop capture.

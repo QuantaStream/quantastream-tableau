@@ -41,6 +41,7 @@ scripts/load_superstore_csv.py -target http://127.0.0.1:8088/ingest/json input.c
 scripts/summarize_mysql_trace.py /tmp/quantastream-tableau.log > captures/tableau-smoke-summary.md
 scripts/trace_to_sqlrunner.py /tmp/quantastream-tableau.log \
   > captures/sqlrunner/mysql_compat_tableau_capture.yaml
+scripts/run_engine_tableau_suites.sh
 ```
 
 The loader helper accepts either original Tableau headers or normalized
@@ -48,7 +49,8 @@ snake_case headers and posts event batches to `qstream-loader`. The trace
 summary helper consumes QuantaStream `MYSQL_COMMAND_TRACE` logs emitted by the
 engine when command tracing is enabled. The SQLRunner helper turns the same
 capture into a draft replay suite for cleanup and migration into the engine
-repo.
+repo. The engine-suite helper runs the curated Tableau replay suites that now
+live under `quantastream/sqlrunner/sqltests`.
 
 ## Scope
 
@@ -97,3 +99,14 @@ For a deterministic end-to-end check before Tableau Desktop is installed, use
 runbooks/local-superstore-loop.md. It loads the small synthetic Superstore-shaped
 CSV in samples/superstore/synthetic_orders.csv and runs the SQL smoke pack in
 queries/superstore_smoke.sql.
+
+For the engine-side Tableau replay suites, use:
+
+```bash
+scripts/run_engine_tableau_suites.sh
+```
+
+By default this expects the QuantaStream engine repo at `../quantastream` and a
+local MySQL-compatible QS endpoint on `127.0.0.1:4000`. Override `QS_REPO`,
+`ENGINE`, `MYSQL_HOST`, `MYSQL_PORT`, `MYSQL_USER`, `MYSQL_PASSWORD`, or
+`CONSUL_ADDR` as needed.

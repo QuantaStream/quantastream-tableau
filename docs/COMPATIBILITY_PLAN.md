@@ -55,12 +55,30 @@ with `scripts/trace_to_sqlrunner.py`, then classify:
 
 Target deliverables in the QuantaStream engine repo:
 
-- `sqlrunner/sqltests/mysql_compat_tableau_connect.yaml`
-- `sqlrunner/sqltests/mysql_compat_tableau_metadata.yaml`
-- `sqlrunner/sqltests/mysql_compat_tableau_worksheets.yaml`
+- `sqlrunner/sqltests/mysql_compat_tableau_metadata.yaml` captures session,
+  variable, database, table, column, index, preview, and explain probes.
+- `sqlrunner/sqltests/mysql_compat_tableau_worksheets.yaml` captures common
+  live worksheet query shapes over the TPC-H schema.
+- `sqlrunner/sqltests/mysql_compat_tableau_custom_sql.yaml` captures Tableau's
+  custom-SQL wrapper pattern around derived tables.
+- `sqlrunner/sqltests/mysql_compat_tableau_connect.yaml` remains reserved for
+  future captured connection-only traffic if Tableau sends shapes that do not
+  belong in the metadata suite.
 
-This repository should keep sanitized capture notes in `captures/` and link to
-the engine replay suites once they exist.
+Run the current replay set from this repository with:
+
+```bash
+scripts/run_engine_tableau_suites.sh
+```
+
+By default the helper expects the engine repo at `../quantastream` and a local
+QS MySQL-compatible endpoint on `127.0.0.1:4000`. Set `ENGINE=inabox-direct` and
+`CONSUL_ADDR=127.0.0.1:8500` for direct cluster testing, or set
+`ENGINE=mysql-reference` with `MYSQL_DSN` for reference checks where the target
+suite is compatible with the MySQL fixture.
+
+This repository should keep sanitized capture notes in `captures/` and use new
+captures to refine the curated engine replay suites.
 
 ## Milestone 3: Worksheet Query Coverage
 
@@ -85,6 +103,18 @@ Exit criteria:
 - Date filters work over order and ship dates.
 - Top-N style worksheets either work directly or have a documented supported
   expression path.
+
+## Current Engine Replay Suites
+
+The curated engine suites currently cover:
+
+- metadata/session/catalog discovery;
+- preview and worksheet-style SQL;
+- Tableau custom SQL wrappers over derived tables.
+
+They are intentionally TPC-H based today because the engine repo already has a
+stable TPC-H fixture path. Superstore-specific replay can be added after actual
+Tableau Desktop captures show the generated SQL shapes.
 
 ## Milestone 4: Custom SQL And Extract Smoke
 
