@@ -43,7 +43,8 @@ Exit criteria:
 
 Goal: convert Tableau connection and schema-browsing SQL into repeatable tests.
 
-Capture with `scripts/summarize_mysql_trace.py`, then classify:
+Capture with `scripts/summarize_mysql_trace.py`, generate a draft replay suite
+with `scripts/trace_to_sqlrunner.py`, then classify:
 
 - session setup, including `SET`, `USE`, `SELECT @@...`, and version probes;
 - database and table discovery;

@@ -185,3 +185,15 @@ After the Tableau session, convert the QS trace log into a compact inventory:
 
 The Markdown summary is meant for human triage. The JSON/JSONL output is useful
 when converting captured SQL into SQLRunner replay suites.
+
+Generate a first-pass replay suite:
+
+```bash
+/path/to/quantastream-tableau/scripts/trace_to_sqlrunner.py \
+  /tmp/quantastream-tableau.log \
+  > /path/to/quantastream-tableau/captures/sqlrunner/mysql_compat_tableau_capture.yaml
+```
+
+Use `--include-errors` when you want failed Tableau-generated SQL emitted as
+`xfail` cases for compatibility triage. Review generated suites before moving
+them into `quantastream/sqlrunner/sqltests`.

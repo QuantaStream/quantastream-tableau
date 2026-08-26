@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
+import contextlib
 import io
 import json
 import tempfile
@@ -55,7 +56,8 @@ class MySQLTraceSummaryTests(unittest.TestCase):
             log = Path(tmp) / "trace.log"
             out = Path(tmp) / "events.jsonl"
             log.write_text('MYSQL_COMMAND_TRACE connection_id=1 kind=query sql="select 1" response=query elapsed=1ms\n', encoding="utf-8")
-            rc = trace.main([str(log), "--format", "json", "--events-jsonl", str(out)])
+            with contextlib.redirect_stdout(io.StringIO()):
+                rc = trace.main([str(log), "--format", "json", "--events-jsonl", str(out)])
             self.assertEqual(rc, 0)
             rows = [json.loads(line) for line in out.read_text(encoding="utf-8").splitlines()]
             self.assertEqual(rows[0]["sql"], "select 1")

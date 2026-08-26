@@ -36,7 +36,20 @@ scripts/summarize_mysql_trace.py /tmp/quantastream-tableau.log \
   > captures/tableau-desktop-smoke-summary.json
 ```
 
-Review the summary before committing. Keep only sanitized, useful captures.
+Generate a draft SQLRunner replay suite from the same trace:
+
+```bash
+scripts/trace_to_sqlrunner.py /tmp/quantastream-tableau.log \
+  > captures/sqlrunner/mysql_compat_tableau_capture.yaml
+
+# Include failing SQL as xfail cases when triaging compatibility gaps:
+scripts/trace_to_sqlrunner.py /tmp/quantastream-tableau.log \
+  --include-errors \
+  > captures/sqlrunner/mysql_compat_tableau_capture_with_gaps.yaml
+```
+
+Review summaries and generated suites before committing. Keep only sanitized,
+useful captures.
 
 ## Suggested Capture Names
 

@@ -39,12 +39,16 @@ The Superstore path starts with two plain Python helpers:
 scripts/normalize_superstore_csv.py input.csv /tmp/superstore_orders_normalized.csv
 scripts/load_superstore_csv.py -target http://127.0.0.1:8088/ingest/json input.csv
 scripts/summarize_mysql_trace.py /tmp/quantastream-tableau.log > captures/tableau-smoke-summary.md
+scripts/trace_to_sqlrunner.py /tmp/quantastream-tableau.log \
+  > captures/sqlrunner/mysql_compat_tableau_capture.yaml
 ```
 
 The loader helper accepts either original Tableau headers or normalized
 snake_case headers and posts event batches to `qstream-loader`. The trace
 summary helper consumes QuantaStream `MYSQL_COMMAND_TRACE` logs emitted by the
-engine when command tracing is enabled.
+engine when command tracing is enabled. The SQLRunner helper turns the same
+capture into a draft replay suite for cleanup and migration into the engine
+repo.
 
 ## Scope
 
