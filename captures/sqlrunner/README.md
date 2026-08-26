@@ -7,6 +7,7 @@ Generate a first-pass suite from a QS command trace log:
 
 ```bash
 scripts/trace_to_sqlrunner.py /tmp/quantastream-tableau.log \
+  --classify \
   > captures/sqlrunner/mysql_compat_tableau_capture.yaml
 ```
 
@@ -18,9 +19,11 @@ scripts/trace_to_sqlrunner.py captures/tableau-desktop-smoke-events.jsonl \
   > captures/sqlrunner/mysql_compat_tableau_metadata.yaml
 ```
 
-The generated YAML is intentionally a draft. Review the IDs, split cases into
-connect/metadata/worksheet suites, and add expected rows or expected errors
-before moving it into the engine repo.
+The generated YAML is intentionally a draft. Use `--classify` for one suite
+with per-case Tableau phase metadata, or use `--split-by-phase --out-dir ...`
+to emit separate connect, metadata, worksheet, custom SQL, and extract drafts.
+Review IDs and add expected rows or expected errors before moving generated SQL
+into the engine repo.
 
 Proposed engine-suite names:
 
@@ -28,6 +31,8 @@ Proposed engine-suite names:
 - `mysql_compat_tableau_metadata.yaml`
 - `mysql_compat_tableau_worksheets.yaml`
 - `mysql_compat_tableau_custom_sql.yaml`
+- `mysql_compat_tableau_extract.yaml`
 
 Keep this directory lightweight. The executable suites belong in the engine repo
-once the SQL is cleaned and expected results are known.
+once the SQL is cleaned and expected results are known. Regression fixtures for
+this conversion pipeline live under `fixtures/`.

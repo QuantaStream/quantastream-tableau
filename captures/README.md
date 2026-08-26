@@ -40,16 +40,24 @@ Generate a draft SQLRunner replay suite from the same trace:
 
 ```bash
 scripts/trace_to_sqlrunner.py /tmp/quantastream-tableau.log \
+  --classify \
   > captures/sqlrunner/mysql_compat_tableau_capture.yaml
+
+# Split captured SQL into connect, metadata, worksheet, custom SQL, and extract drafts:
+scripts/trace_to_sqlrunner.py /tmp/quantastream-tableau.log \
+  --split-by-phase \
+  --out-dir captures/sqlrunner/generated
 
 # Include failing SQL as xfail cases when triaging compatibility gaps:
 scripts/trace_to_sqlrunner.py /tmp/quantastream-tableau.log \
+  --classify \
   --include-errors \
   > captures/sqlrunner/mysql_compat_tableau_capture_with_gaps.yaml
 ```
 
 Review summaries and generated suites before committing. Keep only sanitized,
-useful captures.
+useful captures. The sanitized fixture under `fixtures/tableau_trace_sanitized.log`
+provides a small regression sample for the summary and suite-generation tools.
 
 ## Suggested Capture Names
 

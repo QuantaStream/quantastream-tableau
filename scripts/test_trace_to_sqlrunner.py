@@ -10,6 +10,9 @@ from pathlib import Path
 import summarize_mysql_trace as trace
 import trace_to_sqlrunner as replay
 
+ROOT = Path(__file__).resolve().parents[1]
+FIXTURES = ROOT / "fixtures"
+
 
 class TraceToSQLRunnerTests(unittest.TestCase):
     def test_generates_deduplicated_suite(self) -> None:
@@ -43,6 +46,51 @@ class TraceToSQLRunnerTests(unittest.TestCase):
             path.write_text(json.dumps({"source": "trace.log", "line_number": 2, "kind": "query", "sql": "select 1", "response": "query"}) + "\n", encoding="utf-8")
             events = list(replay.load_events([path]))
             self.assertEqual(events[0].sql, "select 1")
+
+    def test_classifies_known_sql_shapes(self) -> None:
+        cases = {
+            "set names utf8mb4": "connect",
+            "select @@version": "connect",
+            "show full tables": "metadata",
+            "select region, sum(sales) from superstore_orders group by region": "worksheet",
+            "select * from (select * from superstore_orders) TableauSQL limit 10": "custom_sql",
+            "select count(*) as row_count from (select id from t) TableauExtract": "extract",
+        }
+        for sql, phase in cases.items():
+            with self.subTest(sql=sql):
+                self.assertEqual(replay.classify_sql(sql), phase)
+
+    def test_sanitized_fixture_generates_expected_classified_suite(self) -> None:
+        self.maxDiff = None
+        events = replay.load_events([FIXTURES / "tableau_trace_sanitized.log"])
+        suite = replay.render_suite(
+            events,
+            "mysql_compat_tableau_capture",
+            "tableau_trace_replay",
+            include_errors=True,
+            classify=True,
+        )
+        expected = (FIXTURES / "sqlrunner" / "mysql_compat_tableau_capture_auto.yaml").read_text(encoding="utf-8")
+        self.assertEqual(suite, expected)
+
+    def test_sanitized_fixture_split_suites_match_expected_outputs(self) -> None:
+        self.maxDiff = None
+        events = replay.load_events([FIXTURES / "tableau_trace_sanitized.log"])
+        with tempfile.TemporaryDirectory() as tmp:
+            written = replay.write_phase_suites(events, Path(tmp), include_errors=True)
+            self.assertEqual(
+                sorted(path.name for path in written),
+                [
+                    "mysql_compat_tableau_connect.yaml",
+                    "mysql_compat_tableau_custom_sql.yaml",
+                    "mysql_compat_tableau_extract.yaml",
+                    "mysql_compat_tableau_metadata.yaml",
+                    "mysql_compat_tableau_worksheets.yaml",
+                ],
+            )
+            for path in written:
+                expected = (FIXTURES / "sqlrunner" / f"split-{path.name}").read_text(encoding="utf-8")
+                self.assertEqual(path.read_text(encoding="utf-8"), expected)
 
 
 if __name__ == "__main__":

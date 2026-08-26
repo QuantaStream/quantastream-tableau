@@ -10,6 +10,9 @@ from pathlib import Path
 
 import summarize_mysql_trace as trace
 
+ROOT = Path(__file__).resolve().parents[1]
+FIXTURES = ROOT / "fixtures"
+
 
 class MySQLTraceSummaryTests(unittest.TestCase):
     def test_parses_raw_trace_line(self) -> None:
@@ -61,6 +64,13 @@ class MySQLTraceSummaryTests(unittest.TestCase):
             self.assertEqual(rc, 0)
             rows = [json.loads(line) for line in out.read_text(encoding="utf-8").splitlines()]
             self.assertEqual(rows[0]["sql"], "select 1")
+
+    def test_sanitized_fixture_summary_stays_stable(self) -> None:
+        self.maxDiff = None
+        events = list(trace.iter_events([FIXTURES / "tableau_trace_sanitized.log"]))
+        summary = trace.markdown_report(trace.summarize(events), sql_limit=20)
+        expected = (FIXTURES / "tableau_trace_summary.md").read_text(encoding="utf-8")
+        self.assertEqual(summary, expected)
 
 
 if __name__ == "__main__":

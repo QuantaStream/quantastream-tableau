@@ -39,8 +39,10 @@ The Superstore path starts with two plain Python helpers:
 scripts/normalize_superstore_csv.py input.csv /tmp/superstore_orders_normalized.csv
 scripts/load_superstore_csv.py -target http://127.0.0.1:8088/ingest/json input.csv
 scripts/summarize_mysql_trace.py /tmp/quantastream-tableau.log > captures/tableau-smoke-summary.md
-scripts/trace_to_sqlrunner.py /tmp/quantastream-tableau.log \
+scripts/trace_to_sqlrunner.py /tmp/quantastream-tableau.log --classify \
   > captures/sqlrunner/mysql_compat_tableau_capture.yaml
+scripts/trace_to_sqlrunner.py /tmp/quantastream-tableau.log \
+  --split-by-phase --out-dir captures/sqlrunner/generated
 scripts/run_engine_tableau_suites.sh
 ```
 
@@ -49,8 +51,10 @@ snake_case headers and posts event batches to `qstream-loader`. The trace
 summary helper consumes QuantaStream `MYSQL_COMMAND_TRACE` logs emitted by the
 engine when command tracing is enabled. The SQLRunner helper turns the same
 capture into a draft replay suite for cleanup and migration into the engine
-repo. The engine-suite helper runs the curated Tableau replay suites that now
-live under `quantastream/sqlrunner/sqltests`, including connect and extract smoke probes.
+repo. Use `--classify` or `--split-by-phase` to bucket captured SQL into
+connect, metadata, worksheet, custom SQL, and extract suites. The engine-suite
+helper runs the curated Tableau replay suites that now live under
+`quantastream/sqlrunner/sqltests`, including connect and extract smoke probes.
 
 ## Scope
 
