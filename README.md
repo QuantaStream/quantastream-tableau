@@ -31,6 +31,18 @@ Start here:
 - samples/: dataset notes; sample data is not vendored.
 - scripts/: small local helpers for preparing test data.
 
+## Data Preparation Helpers
+
+The Superstore path starts with two plain Python helpers:
+
+```bash
+scripts/normalize_superstore_csv.py input.csv /tmp/superstore_orders_normalized.csv
+scripts/load_superstore_csv.py -target http://127.0.0.1:8088/ingest/json input.csv
+```
+
+The loader helper accepts either original Tableau headers or normalized
+snake_case headers and posts event batches to `qstream-loader`.
+
 ## Scope
 
 Planned contents include:

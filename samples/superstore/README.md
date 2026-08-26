@@ -17,6 +17,19 @@ It models the Orders table as a single analytical fact table so Tableau can
 exercise metadata, previews, filters, grouping, and aggregates without requiring
 a connector-specific join model on day one.
 
+## Loader Helpers
+
+Two small scripts support local testing:
+
+```bash
+scripts/normalize_superstore_csv.py input.csv /tmp/superstore_orders_normalized.csv
+scripts/load_superstore_csv.py -target http://127.0.0.1:8088/ingest/json input.csv
+```
+
+`load_superstore_csv.py` accepts either original Tableau Sample Superstore
+headers or the normalized snake_case headers below. It posts JSON event batches
+with `payload.type = "superstore_order"`, matching the schema selector.
+
 ## Suggested Normalized Column Names
 
 The schema uses snake_case names that are stable for SQL and Tableau:
