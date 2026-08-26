@@ -61,6 +61,8 @@ Target deliverables in the QuantaStream engine repo:
   database selection, warning reads, and ping queries.
 - `sqlrunner/sqltests/mysql_compat_tableau_metadata.yaml` captures session,
   variable, database, table, column, index, preview, and explain probes.
+- `sqlrunner/sqltests/mysql_compat_tableau_superstore_worksheets.yaml` captures
+  live worksheet query shapes over the Tableau Sample Superstore-style schema.
 - `sqlrunner/sqltests/mysql_compat_tableau_worksheets.yaml` captures common
   live worksheet query shapes over the TPC-H schema.
 - `sqlrunner/sqltests/mysql_compat_tableau_custom_sql.yaml` captures Tableau's
@@ -75,7 +77,9 @@ scripts/run_engine_tableau_suites.sh
 ```
 
 By default the helper uses `ENGINE=inabox-standard`, expects the engine repo
-at `../quantastream`, and targets a local QS MySQL-compatible endpoint on `127.0.0.1:4000`. Set `ENGINE=inabox-direct` and
+at `../quantastream`, and targets a local QS MySQL-compatible endpoint on
+`127.0.0.1:4000` with `superstore_orders` loaded. Set `TABLEAU_SUITES` to run
+the broader TPC-H, custom SQL, or extract suites. Set `ENGINE=inabox-direct` and
 `CONSUL_ADDR=127.0.0.1:8500` for direct cluster testing, or set
 `ENGINE=mysql-reference` with `MYSQL_DSN` for reference checks where the target
 suite is compatible with the MySQL fixture.

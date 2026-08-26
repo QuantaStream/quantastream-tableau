@@ -59,7 +59,8 @@ capture into a draft replay suite for cleanup and migration into the engine
 repo. Use `--classify` or `--split-by-phase` to bucket captured SQL into
 connect, metadata, worksheet, custom SQL, and extract suites. The engine-suite
 helper runs the curated Tableau replay suites that now live under
-`quantastream/sqlrunner/sqltests`, including connect and extract smoke probes.
+`quantastream/sqlrunner/sqltests`; by default it targets the local Superstore
+loop with connection probes and Superstore worksheet queries.
 
 ## Scope
 
@@ -122,7 +123,8 @@ For the engine-side Tableau replay suites, use:
 scripts/run_engine_tableau_suites.sh
 ```
 
-By default this expects the QuantaStream engine repo at `../quantastream` and a
-local MySQL-compatible QS endpoint on `127.0.0.1:4000`. The default engine is `inabox-standard`; override `QS_REPO`,
-`ENGINE`, `MYSQL_HOST`, `MYSQL_PORT`, `MYSQL_USER`, `MYSQL_PASSWORD`, or
-`CONSUL_ADDR` as needed.
+By default this expects the QuantaStream engine repo at `../quantastream`, a
+local MySQL-compatible QS endpoint on `127.0.0.1:4000`, and the Superstore
+schema loaded as `superstore_orders`. The default engine is `inabox-standard`;
+override `QS_REPO`, `ENGINE`, `MYSQL_HOST`, `MYSQL_PORT`, `MYSQL_USER`,
+`MYSQL_PASSWORD`, `CONSUL_ADDR`, or `TABLEAU_SUITES` as needed.

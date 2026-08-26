@@ -13,7 +13,7 @@ MYSQL_DSN=${MYSQL_DSN:-}
 CONSUL_ADDR=${CONSUL_ADDR:-127.0.0.1:8500}
 BENCHMARK_RUNS=${BENCHMARK_RUNS:-0}
 REPORT_DIR=${REPORT_DIR:-}
-TABLEAU_SUITES=${TABLEAU_SUITES:-mysql_compat_tableau_connect.yaml mysql_compat_tableau_metadata.yaml mysql_compat_tableau_worksheets.yaml mysql_compat_tableau_custom_sql.yaml mysql_compat_tableau_extract.yaml}
+TABLEAU_SUITES=${TABLEAU_SUITES:-mysql_compat_tableau_connect.yaml mysql_compat_tableau_superstore_worksheets.yaml}
 
 if [[ ! -d "$QS_REPO/sqlrunner" ]]; then
   echo "QuantaStream repo not found at QS_REPO=$QS_REPO" >&2
