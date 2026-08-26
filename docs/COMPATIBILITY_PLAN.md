@@ -61,6 +61,9 @@ Target deliverables in the QuantaStream engine repo:
   database selection, warning reads, and ping queries.
 - `sqlrunner/sqltests/mysql_compat_tableau_metadata.yaml` captures session,
   variable, database, table, column, index, preview, and explain probes.
+- `sqlrunner/sqltests/mysql_compat_tableau_superstore_metadata.yaml` captures
+  the same catalog, table, column, index, preview, and explain probes against
+  the Tableau Sample Superstore-style schema.
 - `sqlrunner/sqltests/mysql_compat_tableau_superstore_worksheets.yaml` captures
   live worksheet query shapes over the Tableau Sample Superstore-style schema.
 - `sqlrunner/sqltests/mysql_compat_tableau_worksheets.yaml` captures common

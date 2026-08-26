@@ -86,8 +86,8 @@ ENGINE=inabox-direct CONSUL_ADDR=127.0.0.1:8500 \
   scripts/run_engine_tableau_suites.sh
 ```
 
-By default this runs the connection probes plus the Superstore worksheet replay
-suite. The broader metadata, TPC-H worksheet, custom-SQL wrapper, and bounded
-extract suites live in the engine repo and can be selected with `TABLEAU_SUITES`.
-They complement the Superstore loop; they do not replace a real Tableau Desktop
-capture.
+By default this runs the connection probes plus the Superstore metadata and
+worksheet replay suites. The broader TPC-H metadata, worksheet, custom-SQL
+wrapper, and bounded extract suites live in the engine repo and can be selected
+with `TABLEAU_SUITES`. They complement the Superstore loop; they do not replace
+a real Tableau Desktop capture.

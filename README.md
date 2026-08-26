@@ -60,7 +60,7 @@ repo. Use `--classify` or `--split-by-phase` to bucket captured SQL into
 connect, metadata, worksheet, custom SQL, and extract suites. The engine-suite
 helper runs the curated Tableau replay suites that now live under
 `quantastream/sqlrunner/sqltests`; by default it targets the local Superstore
-loop with connection probes and Superstore worksheet queries.
+loop with connection, metadata, and worksheet queries.
 
 ## Scope
 
