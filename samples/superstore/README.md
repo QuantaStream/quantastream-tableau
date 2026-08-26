@@ -58,3 +58,9 @@ The schema uses snake_case names that are stable for SQL and Tableau:
 
 If the local Tableau sample uses slightly different names, normalize them during
 CSV/JSON preparation rather than changing the SQL-facing test schema every time.
+
+## Synthetic Smoke Data
+
+samples/superstore/synthetic_orders.csv is a tiny QuantaStream-authored,
+Superstore-shaped CSV. It is not Tableau sample data. Use it for deterministic
+loader and query smoke checks before using Tableau's real Sample Superstore data.

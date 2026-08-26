@@ -1,0 +1,9 @@
+Row ID,Order ID,Order Date,Ship Date,Ship Mode,Customer ID,Customer Name,Segment,Country/Region,City,State/Province,Postal Code,Region,Product ID,Category,Sub-Category,Product Name,Sales,Quantity,Discount,Profit
+1,CA-2026-1001,2026-01-02,2026-01-05,Second Class,CG-12520,Claire Gute,Consumer,United States,Henderson,Kentucky,42420,South,FUR-BO-10001798,Furniture,Bookcases,Bush Somerset Bookcase,261.96,2,0,41.91
+2,CA-2026-1002,2026-01-03,2026-01-07,Standard Class,DV-13045,Darrin Van Huff,Corporate,United States,Los Angeles,California,90036,West,OFF-LA-10000240,Office Supplies,Labels,Self-Adhesive Address Labels,14.62,2,0,6.87
+3,CA-2026-1003,2026-01-04,2026-01-08,Standard Class,SO-20335,Sean O'Donnell,Consumer,United States,Fort Lauderdale,Florida,33311,South,FUR-TA-10000577,Furniture,Tables,Bretford CR4500 Series Slim Rectangular Table,957.58,5,0.45,-383.03
+4,CA-2026-1004,2026-01-05,2026-01-09,First Class,BH-11710,Brosina Hoffman,Consumer,United States,Seattle,Washington,98103,West,TEC-PH-10002033,Technology,Phones,Konftel 250 Conference Phone,911.42,4,0.2,68.36
+5,CA-2026-1005,2026-02-15,2026-02-19,Second Class,AA-10315,Alex Avila,Corporate,United States,New York City,New York,10024,East,OFF-ST-10000760,Office Supplies,Storage,Eldon Fold N Roll Cart,22.37,2,0,2.52
+6,CA-2026-1006,2026-02-16,2026-02-20,Standard Class,IM-15070,Irene Maddox,Home Office,United States,Chicago,Illinois,60610,Central,OFF-AR-10002833,Office Supplies,Art,Newell 322 Pencil,9.99,3,0.2,1.87
+7,CA-2026-1007,2026-03-01,2026-03-04,Same Day,EH-13945,Evelyn Henderson,Corporate,United States,Philadelphia,Pennsylvania,19140,East,TEC-AC-10003033,Technology,Accessories,Plantronics Headset,129.99,1,0,36.4
+8,CA-2026-1008,2026-03-02,2026-03-06,Standard Class,KB-16585,Ken Black,Consumer,United States,Austin,Texas,78745,Central,FUR-CH-10000454,Furniture,Chairs,Hon Deluxe Fabric Chair,731.94,3,0.3,-52.28

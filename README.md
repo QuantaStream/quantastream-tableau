@@ -83,3 +83,10 @@ This repository is new. The near-term path is practical and capture-driven:
 
 - [QuantaStream](https://github.com/QuantaStream/quantastream)
 - [QuantaStream website](https://github.com/QuantaStream/QuantaStream.github.io)
+
+## Local Synthetic Smoke
+
+For a deterministic end-to-end check before Tableau Desktop is installed, use
+runbooks/local-superstore-loop.md. It loads the small synthetic Superstore-shaped
+CSV in samples/superstore/synthetic_orders.csv and runs the SQL smoke pack in
+queries/superstore_smoke.sql.
