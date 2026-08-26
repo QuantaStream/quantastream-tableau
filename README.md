@@ -8,13 +8,36 @@ make Tableau connect, browse schemas, preview rows, run worksheets, exercise
 custom SQL, and eventually validate extract behavior against realistic
 QuantaStream data sets.
 
+## Current Focus
+
+The first compliance-oriented target is Tableau's Sample Superstore data. That
+keeps the early work aligned with a dataset Tableau users already recognize,
+while QuantaStream's radiosport data remains a stronger showcase path for public
+dashboards and streaming/bitmap-native storytelling.
+
+Start here:
+
+- [Compatibility plan](docs/COMPATIBILITY_PLAN.md)
+- [Tableau Desktop smoke runbook](runbooks/tableau-desktop-smoke.md)
+- [Superstore sample notes](samples/superstore/README.md)
+- [Superstore QuantaStream schema](configuration/superstore_orders/schema.yaml)
+
+## Repository Layout
+
+- captures/: sanitized Tableau SQL capture notes.
+- configuration/: QuantaStream schemas used for Tableau testing.
+- docs/: compatibility and integration plans.
+- runbooks/: manual smoke-test procedures.
+- samples/: dataset notes; sample data is not vendored.
+- scripts/: small local helpers for preparing test data.
+
 ## Scope
 
 Planned contents include:
 
 - Tableau connection and smoke-test runbooks;
 - captured Tableau-generated SQL;
-- SQLRunner replay suites for Tableau compatibility;
+- SQLRunner replay-suite notes for Tableau compatibility;
 - sample dashboards or workbook assets built from QuantaStream sample data;
 - Tableau Datasource Verification Tool notes and results;
 - connector experiments if a dedicated Tableau connector becomes useful later.
@@ -33,20 +56,18 @@ compatibility harnesses rather than the core database engine.
 
 ## Status
 
-This repository is new. The current development plan lives internally while the
-Tableau compatibility surface is being explored.
+This repository is new. The near-term path is practical and capture-driven:
 
-Near-term engineering path:
-
-1. Capture real Tableau Desktop SQL traffic against a local QuantaStream server.
-2. Convert captured traffic into SQLRunner replay suites.
-3. Harden metadata, worksheet, custom SQL, and extract behavior based on those
-   captures.
-4. Use Tableau's verification tooling later as an external compatibility
-   pressure test.
+1. Prepare and load Tableau Sample Superstore into QuantaStream.
+2. Connect Tableau Desktop through the built-in MySQL connector.
+3. Capture real Tableau-generated SQL for connect, metadata, previews,
+   worksheets, custom SQL, and extract smoke.
+4. Convert stable captured SQL into SQLRunner compatibility suites in the
+   QuantaStream engine repo.
+5. Use Tableau verification tooling later as an external compatibility pressure
+   test.
 
 ## Related Repositories
 
 - [QuantaStream](https://github.com/QuantaStream/quantastream)
 - [QuantaStream website](https://github.com/QuantaStream/QuantaStream.github.io)
-
