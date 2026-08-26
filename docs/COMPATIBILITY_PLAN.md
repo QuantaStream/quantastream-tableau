@@ -61,6 +61,8 @@ Target deliverables in the QuantaStream engine repo:
   live worksheet query shapes over the TPC-H schema.
 - `sqlrunner/sqltests/mysql_compat_tableau_custom_sql.yaml` captures Tableau's
   custom-SQL wrapper pattern around derived tables.
+- `sqlrunner/sqltests/mysql_compat_tableau_extract.yaml` captures bounded
+  extract-style count, scan, incremental-refresh, and join probes.
 - `sqlrunner/sqltests/mysql_compat_tableau_connect.yaml` remains reserved for
   future captured connection-only traffic if Tableau sends shapes that do not
   belong in the metadata suite.
@@ -110,7 +112,8 @@ The curated engine suites currently cover:
 
 - metadata/session/catalog discovery;
 - preview and worksheet-style SQL;
-- Tableau custom SQL wrappers over derived tables.
+- Tableau custom SQL wrappers over derived tables;
+- bounded extract-style count, scan, incremental refresh, and join probes.
 
 They are intentionally TPC-H based today because the engine repo already has a
 stable TPC-H fixture path. Superstore-specific replay can be added after actual
@@ -129,8 +132,10 @@ Custom SQL:
 
 Extract smoke:
 
-- create a small extract from `superstore_orders`;
-- capture extract SQL;
+- engine replay now covers bounded extract-style probes in
+  `mysql_compat_tableau_extract.yaml`;
+- create a small extract from `superstore_orders` in Tableau Desktop;
+- capture real extract SQL and compare it to the bounded replay suite;
 - measure proxy memory and cancellation behavior;
 - document any first-release extract size guidance.
 

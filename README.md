@@ -50,7 +50,7 @@ summary helper consumes QuantaStream `MYSQL_COMMAND_TRACE` logs emitted by the
 engine when command tracing is enabled. The SQLRunner helper turns the same
 capture into a draft replay suite for cleanup and migration into the engine
 repo. The engine-suite helper runs the curated Tableau replay suites that now
-live under `quantastream/sqlrunner/sqltests`.
+live under `quantastream/sqlrunner/sqltests`, including extract smoke probes.
 
 ## Scope
 
@@ -59,6 +59,7 @@ Planned contents include:
 - Tableau connection and smoke-test runbooks;
 - captured Tableau-generated SQL;
 - SQLRunner replay-suite notes for Tableau compatibility;
+- engine replay-suite runner for metadata, worksheet, custom SQL, and extract smoke;
 - sample dashboards or workbook assets built from QuantaStream sample data;
 - Tableau Datasource Verification Tool notes and results;
 - connector experiments if a dedicated Tableau connector becomes useful later.
