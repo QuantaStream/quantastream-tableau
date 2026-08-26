@@ -68,6 +68,6 @@ ENGINE=inabox-direct CONSUL_ADDR=127.0.0.1:8500 \
   scripts/run_engine_tableau_suites.sh
 ```
 
-These suites live in the engine repo and cover Tableau metadata, worksheet,
+These suites live in the engine repo and cover Tableau connect, metadata, worksheet,
 custom-SQL wrapper, and bounded extract behavior. They complement the Superstore loop; they do not
 replace a real Tableau Desktop capture.

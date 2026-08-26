@@ -55,6 +55,9 @@ with `scripts/trace_to_sqlrunner.py`, then classify:
 
 Target deliverables in the QuantaStream engine repo:
 
+- `sqlrunner/sqltests/mysql_compat_tableau_connect.yaml` captures startup
+  session setup, version probes, connection metadata functions, charset probes,
+  database selection, warning reads, and ping queries.
 - `sqlrunner/sqltests/mysql_compat_tableau_metadata.yaml` captures session,
   variable, database, table, column, index, preview, and explain probes.
 - `sqlrunner/sqltests/mysql_compat_tableau_worksheets.yaml` captures common
@@ -63,9 +66,6 @@ Target deliverables in the QuantaStream engine repo:
   custom-SQL wrapper pattern around derived tables.
 - `sqlrunner/sqltests/mysql_compat_tableau_extract.yaml` captures bounded
   extract-style count, scan, incremental-refresh, and join probes.
-- `sqlrunner/sqltests/mysql_compat_tableau_connect.yaml` remains reserved for
-  future captured connection-only traffic if Tableau sends shapes that do not
-  belong in the metadata suite.
 
 Run the current replay set from this repository with:
 
@@ -110,6 +110,7 @@ Exit criteria:
 
 The curated engine suites currently cover:
 
+- connection startup/session setup;
 - metadata/session/catalog discovery;
 - preview and worksheet-style SQL;
 - Tableau custom SQL wrappers over derived tables;
