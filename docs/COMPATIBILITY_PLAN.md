@@ -19,7 +19,7 @@ Expected setup:
 - QuantaStream single-node server running on `127.0.0.1:4000`.
 - Static or permissive QS auth configured for a local test user.
 - `superstore_orders` deployed and loaded with Tableau Sample Superstore data.
-- MySQL endpoint query logging enabled when available.
+- MySQL command tracing enabled with `QUANTASTREAM_MYSQL_COMMAND_TRACE=true`.
 
 Smoke actions:
 
@@ -43,7 +43,7 @@ Exit criteria:
 
 Goal: convert Tableau connection and schema-browsing SQL into repeatable tests.
 
-Capture and classify:
+Capture with `scripts/summarize_mysql_trace.py`, then classify:
 
 - session setup, including `SET`, `USE`, `SELECT @@...`, and version probes;
 - database and table discovery;

@@ -1,18 +1,47 @@
-# Tableau SQL Captures
+# Captures
 
-Store sanitized Tableau-generated SQL captures here.
+This directory is for sanitized Tableau-generated SQL captures and summaries.
+Do not commit credentials, customer data, unsanitized engine logs, or screenshots
+that expose private environment details.
 
-Do not commit private credentials, customer data, local machine names, or raw
-logs containing secrets. Prefer small Markdown notes that describe:
+## MySQL Command Trace Workflow
 
-- Tableau version;
-- QuantaStream version;
-- connector path;
-- dataset;
-- user action;
-- SQL emitted;
-- observed result;
-- classification: supported, QS bug, unsupported SQL, Tableau setup issue.
+Start QuantaStream with command tracing enabled:
 
-Captured SQL that becomes stable compatibility coverage should be moved into the
-QuantaStream engine repo as SQLRunner suites.
+```bash
+QUANTASTREAM_MYSQL_COMMAND_TRACE=true ./bin/quantastream \
+  -config-dir ./runtime/config \
+  -data-dir ./data \
+  -wal-path ./data/storage.wal \
+  -bind 127.0.0.1 \
+  -mysql-port 4000 \
+  -native-grpc-bind 127.0.0.1 \
+  -native-grpc-port 4100 \
+  -database quanta \
+  -auth-mode static \
+  -auth-account-file ./auth/accounts.yaml \
+  -access-policy-file ./auth/access-policy.yaml \
+  2>&1 | tee /tmp/quantastream-tableau.log
+```
+
+After a Tableau Desktop session, summarize the command trace:
+
+```bash
+scripts/summarize_mysql_trace.py /tmp/quantastream-tableau.log \
+  > captures/tableau-desktop-smoke-summary.md
+
+scripts/summarize_mysql_trace.py /tmp/quantastream-tableau.log \
+  --format json \
+  --events-jsonl captures/tableau-desktop-smoke-events.jsonl \
+  > captures/tableau-desktop-smoke-summary.json
+```
+
+Review the summary before committing. Keep only sanitized, useful captures.
+
+## Suggested Capture Names
+
+Use descriptive names that identify the test phase and date, for example:
+
+- `tableau-connect-20260825-summary.md`
+- `tableau-metadata-20260825-events.jsonl`
+- `tableau-worksheet-superstore-20260825-summary.md`

@@ -24,7 +24,7 @@ Start here:
 
 ## Repository Layout
 
-- captures/: sanitized Tableau SQL capture notes.
+- captures/: sanitized Tableau SQL capture notes and trace summaries.
 - configuration/: QuantaStream schemas used for Tableau testing.
 - docs/: compatibility and integration plans.
 - runbooks/: manual smoke-test procedures.
@@ -38,10 +38,13 @@ The Superstore path starts with two plain Python helpers:
 ```bash
 scripts/normalize_superstore_csv.py input.csv /tmp/superstore_orders_normalized.csv
 scripts/load_superstore_csv.py -target http://127.0.0.1:8088/ingest/json input.csv
+scripts/summarize_mysql_trace.py /tmp/quantastream-tableau.log > captures/tableau-smoke-summary.md
 ```
 
 The loader helper accepts either original Tableau headers or normalized
-snake_case headers and posts event batches to `qstream-loader`.
+snake_case headers and posts event batches to `qstream-loader`. The trace
+summary helper consumes QuantaStream `MYSQL_COMMAND_TRACE` logs emitted by the
+engine when command tracing is enabled.
 
 ## Scope
 

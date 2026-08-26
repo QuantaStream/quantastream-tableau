@@ -34,10 +34,11 @@ go run ./quanta-admin create \
 Use a local QuantaStream server with the MySQL endpoint on port `4000` and the
 native gRPC endpoint on port `4100`.
 
-A typical release-bundle flow is:
+A typical release-bundle flow is below. Keep command tracing enabled while
+capturing Tableau-generated SQL.
 
 ```bash
-./bin/quantastream \
+QUANTASTREAM_MYSQL_COMMAND_TRACE=true ./bin/quantastream \
   -config-dir ./runtime/config \
   -data-dir ./data \
   -wal-path ./data/storage.wal \
@@ -48,7 +49,8 @@ A typical release-bundle flow is:
   -database quanta \
   -auth-mode static \
   -auth-account-file ./auth/accounts.yaml \
-  -access-policy-file ./auth/access-policy.yaml
+  -access-policy-file ./auth/access-policy.yaml \
+  2>&1 | tee /tmp/quantastream-tableau.log
 ```
 
 ## 3. Start The JSON Loader
@@ -164,3 +166,22 @@ For each failure, capture:
 - whether the same SQL works in `mysql` CLI.
 
 Store sanitized notes under `captures/`.
+
+## Summarize The QS Command Trace
+
+After the Tableau session, convert the QS trace log into a compact inventory:
+
+```bash
+/path/to/quantastream-tableau/scripts/summarize_mysql_trace.py \
+  /tmp/quantastream-tableau.log \
+  > /path/to/quantastream-tableau/captures/tableau-desktop-smoke-summary.md
+
+/path/to/quantastream-tableau/scripts/summarize_mysql_trace.py \
+  /tmp/quantastream-tableau.log \
+  --format json \
+  --events-jsonl /path/to/quantastream-tableau/captures/tableau-desktop-smoke-events.jsonl \
+  > /path/to/quantastream-tableau/captures/tableau-desktop-smoke-summary.json
+```
+
+The Markdown summary is meant for human triage. The JSON/JSONL output is useful
+when converting captured SQL into SQLRunner replay suites.
