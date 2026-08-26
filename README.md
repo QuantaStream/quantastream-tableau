@@ -33,10 +33,12 @@ Start here:
 
 ## Data Preparation Helpers
 
-The Superstore path starts with two plain Python helpers:
+The Superstore path uses small shell and Python helpers:
 
 ```bash
 scripts/normalize_superstore_csv.py input.csv /tmp/superstore_orders_normalized.csv
+scripts/start_local_superstore_source.sh
+scripts/run_local_superstore_loop.sh
 scripts/load_superstore_csv.py -target http://127.0.0.1:8088/ingest/json input.csv
 scripts/summarize_mysql_trace.py /tmp/quantastream-tableau.log > captures/tableau-smoke-summary.md
 scripts/trace_to_sqlrunner.py /tmp/quantastream-tableau.log --classify \
@@ -46,10 +48,13 @@ scripts/trace_to_sqlrunner.py /tmp/quantastream-tableau.log \
 scripts/run_engine_tableau_suites.sh
 ```
 
-The loader helper accepts either original Tableau headers or normalized
-snake_case headers and posts event batches to `qstream-loader`. The trace
-summary helper consumes QuantaStream `MYSQL_COMMAND_TRACE` logs emitted by the
-engine when command tracing is enabled. The SQLRunner helper turns the same
+The local Superstore helpers start a source-tree QuantaStream server, stage the
+Superstore schema, launch `qstream-loader`, load the committed synthetic sample,
+and run worksheet-style smoke SQL. The loader helper accepts either original
+Tableau headers or normalized snake_case headers and posts event batches to
+`qstream-loader`. The trace summary helper consumes QuantaStream
+`MYSQL_COMMAND_TRACE` logs emitted by the engine when command tracing is
+enabled. The SQLRunner helper turns the same
 capture into a draft replay suite for cleanup and migration into the engine
 repo. Use `--classify` or `--split-by-phase` to bucket captured SQL into
 connect, metadata, worksheet, custom SQL, and extract suites. The engine-suite
@@ -101,9 +106,15 @@ This repository is new. The near-term path is practical and capture-driven:
 ## Local Synthetic Smoke
 
 For a deterministic end-to-end check before Tableau Desktop is installed, use
-runbooks/local-superstore-loop.md. It loads the small synthetic Superstore-shaped
-CSV in samples/superstore/synthetic_orders.csv and runs the SQL smoke pack in
-queries/superstore_smoke.sql.
+runbooks/local-superstore-loop.md or run:
+
+```bash
+scripts/run_local_superstore_loop.sh
+```
+
+It starts a clean local source-tree QuantaStream instance, loads the small
+synthetic Superstore-shaped CSV in samples/superstore/synthetic_orders.csv, and
+runs the SQL smoke pack in queries/superstore_smoke.sql.
 
 For the engine-side Tableau replay suites, use:
 

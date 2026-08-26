@@ -21,4 +21,4 @@ if [[ -n "$MYSQL_PASSWORD" ]]; then
   mysql_args+=(-p"$MYSQL_PASSWORD")
 fi
 
-mysql "${mysql_args[@]}" < "$QUERY_FILE"
+sed "/^[[:space:]]*--/d" "$QUERY_FILE" | mysql "${mysql_args[@]}"

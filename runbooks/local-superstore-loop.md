@@ -5,12 +5,30 @@ It uses synthetic Superstore-shaped data committed in this repository so the
 loader, schema, and SQL smoke queries can be tested without downloading Tableau
 sample files first.
 
-## 1. Start QuantaStream And qstream-loader
+## 1. Run The One-Command Loop
 
-Follow the startup steps in [Tableau Desktop Smoke](tableau-desktop-smoke.md)
-through the loader health check.
+From this repository, with the QuantaStream source checkout beside it at
+`../quantastream`, run:
 
-## 2. Load Synthetic Superstore Rows
+```bash
+scripts/run_local_superstore_loop.sh
+```
+
+This stages the Superstore schema under `/tmp/qs-tableau-superstore/config`,
+starts a clean local QuantaStream standard server, starts `qstream-loader`,
+loads the committed synthetic CSV, and runs the smoke SQL below. Override
+`QS_REPO`, `RUN_DIR`, `MYSQL_PORT`, `NATIVE_GRPC_PORT`, or `LOADER_LISTEN` if
+your local layout or ports differ.
+
+## 2. Manual Start Only
+
+To start just the local server and loader, then load data yourself:
+
+```bash
+scripts/start_local_superstore_source.sh
+```
+
+## 3. Load Synthetic Superstore Rows
 
 ```bash
 scripts/load_superstore_csv.py \
@@ -26,7 +44,7 @@ Expected stderr shape:
 file=samples/superstore/synthetic_orders.csv rows=8 emitted=8 accepted=8 failed=0 elapsed=...
 ```
 
-## 3. Run Smoke Queries
+## 4. Run Smoke Queries
 
 ```bash
 scripts/run_superstore_smoke.sh
@@ -39,7 +57,7 @@ MYSQL_HOST=127.0.0.1 MYSQL_PORT=4000 MYSQL_USER=qstream MYSQL_DB=quanta \
   scripts/run_superstore_smoke.sh
 ```
 
-## 4. What This Proves
+## 5. What This Proves
 
 This loop proves:
 
@@ -52,7 +70,7 @@ This loop proves:
 It does not prove Tableau compatibility by itself. The next step is still to
 connect Tableau Desktop and capture its actual generated SQL.
 
-## 5. Optional Engine Replay Suites
+## 6. Optional Engine Replay Suites
 
 When a QuantaStream engine repo is available next to this repository, run the
 curated Tableau replay suites against a TPC-H-loaded single-node QS endpoint:
@@ -68,6 +86,6 @@ ENGINE=inabox-direct CONSUL_ADDR=127.0.0.1:8500 \
   scripts/run_engine_tableau_suites.sh
 ```
 
-These suites live in the engine repo and cover Tableau connect, metadata, worksheet,
-custom-SQL wrapper, and bounded extract behavior. They complement the Superstore loop; they do not
-replace a real Tableau Desktop capture.
+These suites live in the engine repo and cover Tableau connect, metadata,
+worksheet, custom-SQL wrapper, and bounded extract behavior. They complement
+the Superstore loop; they do not replace a real Tableau Desktop capture.
