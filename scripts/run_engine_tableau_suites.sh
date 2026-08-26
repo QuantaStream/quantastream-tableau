@@ -3,7 +3,7 @@ set -euo pipefail
 
 ROOT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
 QS_REPO=${QS_REPO:-$(cd "$ROOT_DIR/.." && pwd)/quantastream}
-ENGINE=${ENGINE:-proxy}
+ENGINE=${ENGINE:-inabox-standard}
 MYSQL_HOST=${MYSQL_HOST:-127.0.0.1}
 MYSQL_PORT=${MYSQL_PORT:-4000}
 MYSQL_USER=${MYSQL_USER:-qstream}

@@ -112,6 +112,6 @@ scripts/run_engine_tableau_suites.sh
 ```
 
 By default this expects the QuantaStream engine repo at `../quantastream` and a
-local MySQL-compatible QS endpoint on `127.0.0.1:4000`. Override `QS_REPO`,
+local MySQL-compatible QS endpoint on `127.0.0.1:4000`. The default engine is `inabox-standard`; override `QS_REPO`,
 `ENGINE`, `MYSQL_HOST`, `MYSQL_PORT`, `MYSQL_USER`, `MYSQL_PASSWORD`, or
 `CONSUL_ADDR` as needed.

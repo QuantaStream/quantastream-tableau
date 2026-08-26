@@ -55,7 +55,7 @@ connect Tableau Desktop and capture its actual generated SQL.
 ## 5. Optional Engine Replay Suites
 
 When a QuantaStream engine repo is available next to this repository, run the
-curated Tableau replay suites against a TPC-H-loaded QS endpoint:
+curated Tableau replay suites against a TPC-H-loaded single-node QS endpoint:
 
 ```bash
 scripts/run_engine_tableau_suites.sh

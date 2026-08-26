@@ -74,8 +74,8 @@ Run the current replay set from this repository with:
 scripts/run_engine_tableau_suites.sh
 ```
 
-By default the helper expects the engine repo at `../quantastream` and a local
-QS MySQL-compatible endpoint on `127.0.0.1:4000`. Set `ENGINE=inabox-direct` and
+By default the helper uses `ENGINE=inabox-standard`, expects the engine repo
+at `../quantastream`, and targets a local QS MySQL-compatible endpoint on `127.0.0.1:4000`. Set `ENGINE=inabox-direct` and
 `CONSUL_ADDR=127.0.0.1:8500` for direct cluster testing, or set
 `ENGINE=mysql-reference` with `MYSQL_DSN` for reference checks where the target
 suite is compatible with the MySQL fixture.
