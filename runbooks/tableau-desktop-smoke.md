@@ -186,6 +186,18 @@ canvas and define the relationships manually:
 Then build a simple worksheet across the three tables, such as order date by
 customer segment with lineitem count or extended price sum.
 
+For packaged demos or first-user walkthroughs, curated views are usually better
+than manual relationships. Install the TPC-H view package from this repository:
+
+```bash
+mysql -h 127.0.0.1 -P 4000 -u qstream -D quanta \
+  < /path/to/quantastream-tableau/queries/tpch_tableau_views.sql
+```
+
+Then use `tpch_order_line_sales_base` directly in Tableau. It flattens the
+`customer -> orders -> lineitem -> nation -> region` path into worksheet-ready
+fields while keeping the underlying QuantaStream schema normalized.
+
 ## Capture Template
 
 For each failure, capture:

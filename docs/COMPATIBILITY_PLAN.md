@@ -130,6 +130,13 @@ primary keys, then opening Tableau's relationship editor without requesting
 foreign-key discovery metadata from QuantaStream. A dedicated Tableau connector
 package may be the right place to improve this later.
 
+For release packaging and public demos, curated views are the preferred path for
+relationship-heavy datasets. The Tableau package now includes
+`queries/tpch_tableau_views.sql` plus matching YAML view definitions under
+`configuration/views/`. These install `q3_order_line_base` and
+`tpch_order_line_sales_base`, giving Tableau users a worksheet-ready TPC-H
+source without relying on JDBC relationship auto-discovery.
+
 ## Current Engine Replay Suites
 
 The curated engine suites currently cover:

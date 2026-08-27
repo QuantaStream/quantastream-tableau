@@ -1,0 +1,14 @@
+view_name: q3_order_line_base
+sql: |
+  create view q3_order_line_base as
+  select
+    c.c_mktsegment as market_segment,
+    o.o_orderkey as order_key,
+    o.o_orderdate as order_date,
+    o.o_shippriority as ship_priority,
+    l.l_extendedprice as extended_price,
+    l.l_discount as discount,
+    l.l_shipdate as ship_date
+  from customer as c
+  inner join orders as o on c.c_custkey = o.o_custkey
+  inner join lineitem as l on o.o_orderkey = l.l_orderkey

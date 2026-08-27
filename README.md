@@ -22,13 +22,14 @@ Start here:
 
 - [Compatibility plan](docs/COMPATIBILITY_PLAN.md)
 - [Tableau Desktop smoke runbook](runbooks/tableau-desktop-smoke.md)
+- [TPC-H Tableau views](runbooks/tpch-tableau-views.md)
 - [Superstore sample notes](samples/superstore/README.md)
 - [Superstore QuantaStream schema](configuration/superstore_orders/schema.yaml)
 
 ## Repository Layout
 
 - captures/: sanitized Tableau SQL capture notes and trace summaries.
-- configuration/: QuantaStream schemas used for Tableau testing.
+- configuration/: QuantaStream table and view schemas used for Tableau testing.
 - docs/: compatibility and integration plans.
 - runbooks/: manual smoke-test procedures.
 - samples/: dataset notes; sample data is not vendored.
@@ -112,6 +113,10 @@ This repository is new. The near-term path is practical and capture-driven:
 - For TPC-H relationship tests, define relationships manually, for example
   `customer.c_custkey = orders.o_custkey` and
   `orders.o_orderkey = lineitem.l_orderkey`.
+- For a smoother Tableau package, prefer curated views over asking users to
+  recreate the same relationship graph. This repository includes
+  `queries/tpch_tableau_views.sql`, which installs `q3_order_line_base` and the
+  wider `tpch_order_line_sales_base` view.
 - Keep `QUANTASTREAM_MYSQL_COMMAND_TRACE=true` enabled while capturing Tableau
   issues, then summarize or bundle the resulting QS trace log.
 
