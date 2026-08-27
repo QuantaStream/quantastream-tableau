@@ -2,11 +2,14 @@
 
 This repository contains Tableau integration assets for QuantaStream.
 
-The first integration target is Tableau Desktop using Tableau's native MySQL
-connector against the QuantaStream MySQL-compatible endpoint. The goal is to
-make Tableau connect, browse schemas, preview rows, run worksheets, exercise
-custom SQL, and eventually validate extract behavior against realistic
-QuantaStream data sets.
+The first integration target is Tableau Desktop using Tableau's
+**Other Databases (JDBC)** path with the MySQL JDBC driver against the
+QuantaStream MySQL-compatible endpoint. The goal is to make Tableau connect,
+browse schemas, preview rows, run worksheets, exercise custom SQL, and
+eventually validate extract behavior against realistic QuantaStream data sets.
+
+Do not use Tableau's built-in MySQL connector for the current preview loop.
+Use the generic JDBC connector and a MySQL JDBC URL instead.
 
 ## Current Focus
 
@@ -91,13 +94,26 @@ compatibility harnesses rather than the core database engine.
 This repository is new. The near-term path is practical and capture-driven:
 
 1. Prepare and load Tableau Sample Superstore into QuantaStream.
-2. Connect Tableau Desktop through the built-in MySQL connector.
+2. Connect Tableau Desktop through **Other Databases (JDBC)**.
 3. Capture real Tableau-generated SQL for connect, metadata, previews,
    worksheets, custom SQL, and extract smoke.
 4. Convert stable captured SQL into SQLRunner compatibility suites in the
    QuantaStream engine repo.
 5. Use Tableau verification tooling later as an external compatibility pressure
    test.
+
+## Current Tableau Notes
+
+- Use Tableau's generic JDBC connector with the MySQL Connector/J driver.
+- Manual relationships work. Automatic relationship inference is not expected
+  in the current preview because Tableau's generic JDBC path reads table
+  columns and primary keys but does not appear to request foreign-key discovery
+  metadata during the drag/drop relationship flow.
+- For TPC-H relationship tests, define relationships manually, for example
+  `customer.c_custkey = orders.o_custkey` and
+  `orders.o_orderkey = lineitem.l_orderkey`.
+- Keep `QUANTASTREAM_MYSQL_COMMAND_TRACE=true` enabled while capturing Tableau
+  issues, then summarize or bundle the resulting QS trace log.
 
 ## Related Repositories
 

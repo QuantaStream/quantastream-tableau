@@ -135,12 +135,30 @@ limit 20;
 ## 7. Connect Tableau Desktop
 
 1. Open Tableau Desktop.
-2. Choose the MySQL connector.
-3. Use host `127.0.0.1`, port `4000`, database `quanta`.
-4. Use the configured QuantaStream test user.
-5. Select `superstore_orders`.
-6. Preview rows.
-7. Create a worksheet.
+2. Choose **Other Databases (JDBC)**.
+3. Use the MySQL Connector/J driver.
+4. Use a JDBC URL:
+
+   ```text
+   jdbc:mysql://127.0.0.1:4000/quanta?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+   ```
+
+   When Tableau Desktop runs on Windows and QuantaStream runs inside WSL, use:
+
+   ```text
+   jdbc:mysql://wsl.localhost:4000/quanta?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+   ```
+
+5. Use the configured QuantaStream test user, for example `qstream`.
+6. Select the `quanta` database.
+7. Select `superstore_orders`.
+8. Preview rows.
+9. Create a worksheet.
+
+Do not use Tableau's built-in MySQL connector for this preview path. It may
+route users back through Tableau's MySQL-driver installation flow, while the
+generic JDBC path is the route currently exercised by the QuantaStream Tableau
+compatibility suites.
 
 ## First Worksheet Checks
 
@@ -151,6 +169,22 @@ Create these simple views:
 - profit by `segment` and `sub_category`;
 - top products by `sales`;
 - filters on `region`, `ship_mode`, and `order_date`.
+
+## Relationship Checks
+
+Manual Tableau relationships work with QuantaStream today. Automatic
+relationship inference is not expected in the current preview. Tableau's
+generic JDBC path reads columns and primary keys from QuantaStream, then opens
+the relationship editor without requesting foreign-key discovery metadata.
+
+For a TPC-H relationship smoke, drag these tables onto the Tableau data source
+canvas and define the relationships manually:
+
+- `customer.c_custkey = orders.o_custkey`
+- `orders.o_orderkey = lineitem.l_orderkey`
+
+Then build a simple worksheet across the three tables, such as order date by
+customer segment with lineitem count or extended price sum.
 
 ## Capture Template
 
@@ -166,6 +200,49 @@ For each failure, capture:
 - whether the same SQL works in `mysql` CLI.
 
 Store sanitized notes under `captures/`.
+
+## QS Trace And Support Bundle
+
+Keep QS command tracing enabled while reproducing Tableau issues:
+
+```bash
+QUANTASTREAM_MYSQL_COMMAND_TRACE=true ./bin/quantastream \
+  -config-dir ./runtime/config \
+  -data-dir ./data \
+  -wal-path ./data/storage.wal \
+  -bind 127.0.0.1 \
+  -mysql-port 4000 \
+  -native-grpc-bind 127.0.0.1 \
+  -native-grpc-port 4100 \
+  -database quanta \
+  -auth-mode static \
+  -auth-account-file ./auth/accounts.yaml \
+  -access-policy-file ./auth/access-policy.yaml \
+  2>&1 | tee /tmp/quantastream-tableau.log
+```
+
+Create a QuantaStream support bundle and include the trace log as a log tail:
+
+```bash
+./bin/qstream-admin support bundle \
+  --output /tmp/qstream-tableau-support-$(date -u +%Y%m%dT%H%M%SZ).tar.gz \
+  --data-dir ./data \
+  --config-dir ./runtime/config \
+  --wal-path ./data/storage.wal \
+  --auth-account-file ./auth/accounts.yaml \
+  --access-policy-file ./auth/access-policy.yaml \
+  --log-path /tmp/quantastream-tableau.log
+```
+
+From a source checkout, replace `./bin/qstream-admin` with
+`go run ./quanta-admin` from the QuantaStream repository. The support bundle
+does not include table data files or raw auth/access files. Review any included
+log tails for local paths, credentials, or private data before sharing.
+
+Tableau Desktop logs are separate from the QS support bundle. On Windows they
+are usually under `Documents/My Tableau Repository/Logs`; localized installs may
+translate the directory names. Include a short sanitized excerpt only when the
+QS trace does not explain the issue.
 
 ## Summarize The QS Command Trace
 

@@ -59,6 +59,27 @@ Review summaries and generated suites before committing. Keep only sanitized,
 useful captures. The sanitized fixture under `fixtures/tableau_trace_sanitized.log`
 provides a small regression sample for the summary and suite-generation tools.
 
+## Support Bundles
+
+For QuantaStream engine issues triggered from Tableau, create a QS support
+bundle and pass the Tableau trace log as a log path:
+
+```bash
+./bin/qstream-admin support bundle \
+  --output /tmp/qstream-tableau-support-$(date -u +%Y%m%dT%H%M%SZ).tar.gz \
+  --data-dir ./data \
+  --config-dir ./runtime/config \
+  --wal-path ./data/storage.wal \
+  --auth-account-file ./auth/accounts.yaml \
+  --access-policy-file ./auth/access-policy.yaml \
+  --log-path /tmp/quantastream-tableau.log
+```
+
+The support bundle intentionally excludes table data files and raw auth/access
+files, but it can include recent log tails. Review those log excerpts before
+sharing. Tableau Desktop's own logs are separate; include only short sanitized
+snippets when the QS trace does not explain the failure.
+
 ## Suggested Capture Names
 
 Use descriptive names that identify the test phase and date, for example:

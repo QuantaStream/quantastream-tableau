@@ -1,15 +1,16 @@
 # Tableau Compatibility Plan
 
 This plan defines the first QuantaStream/Tableau integration path. The first
-path is Tableau Desktop using Tableau's built-in MySQL connector against the
-QuantaStream MySQL-compatible endpoint.
+path is Tableau Desktop using **Other Databases (JDBC)** with the MySQL JDBC
+driver against the QuantaStream MySQL-compatible endpoint.
 
 A dedicated Tableau connector, TDVT verification, and Tableau Exchange packaging
 are later distribution questions. The immediate goal is to make the default
-Tableau connection boring: connect, browse, preview, build worksheets, and
-capture any generated SQL that QuantaStream does not yet support.
+Tableau connection boring: connect, browse, preview, manually define
+relationships where needed, build worksheets, and capture any generated SQL
+that QuantaStream does not yet support.
 
-## Milestone 1: Native MySQL Connector Smoke
+## Milestone 1: JDBC Connector Smoke
 
 Goal: Tableau Desktop connects to a local QuantaStream server and opens a data
 source page without client errors.
@@ -23,7 +24,8 @@ Expected setup:
 
 Smoke actions:
 
-1. Connect with Tableau's MySQL connector.
+1. Connect with Tableau's **Other Databases (JDBC)** connector and the MySQL
+   Connector/J driver.
 2. Select the `quanta` database.
 3. Confirm Tableau can list tables.
 4. Drag `superstore_orders` onto the data source canvas.
@@ -114,6 +116,20 @@ Exit criteria:
 - Top-N style worksheets either work directly or have a documented supported
   expression path.
 
+## Relationship Behavior
+
+Manual Tableau relationships are supported in the current preview. A TPC-H smoke
+can manually relate `customer` to `orders` on
+`customer.c_custkey = orders.o_custkey`, and `orders` to `lineitem` on
+`orders.o_orderkey = lineitem.l_orderkey`, then build worksheets across all
+three tables.
+
+Automatic relationship inference is not a first-preview requirement. Current
+Tableau Desktop traces show the generic JDBC path reading table metadata and
+primary keys, then opening Tableau's relationship editor without requesting
+foreign-key discovery metadata from QuantaStream. A dedicated Tableau connector
+package may be the right place to improve this later.
+
 ## Current Engine Replay Suites
 
 The curated engine suites currently cover:
@@ -153,7 +169,9 @@ Extract smoke:
 Later work can include:
 
 - Tableau Datasource Verification Tool runs;
-- a dedicated Tableau connector package if the native MySQL path is not enough;
+- a dedicated Tableau connector package if the generic JDBC path needs richer
+  metadata behavior, automatic relationship hints, or Tableau Exchange
+  packaging;
 - Tableau Public dashboards built from exported QuantaStream snapshots;
 - radiosport demo workbooks that show QuantaStream's streaming and
   bitmap-native strengths.
