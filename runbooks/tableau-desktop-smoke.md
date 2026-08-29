@@ -137,6 +137,28 @@ limit 20;
 1. Open Tableau Desktop.
 2. Choose **Other Databases (JDBC)**.
 3. Use the MySQL Connector/J driver.
+
+   The current smoke path was tested with Oracle MySQL Connector/J `8.4.0`.
+   Tableau did not ship this jar in the tested Windows install; it was
+   downloaded separately and placed under:
+
+   ```text
+   C:\Program Files\Tableau\Drivers\mysql-connector-j-8.4.0.jar
+   ```
+
+   A compatibility-named copy was also present as:
+
+   ```text
+   C:\Program Files\Tableau\Drivers\mysql-connector-java-8.4.0.jar
+   ```
+
+   Both files had the same SHA-256 hash:
+
+   ```text
+   D77962877D010777CFF997015DA90EE689F0F4BB76848340E1488F2B83332AF5
+   ```
+
+   Restart Tableau Desktop after adding or replacing the driver jar.
 4. Use a JDBC URL:
 
    ```text
@@ -195,8 +217,15 @@ mysql -h 127.0.0.1 -P 4000 -u qstream -D quanta \
 ```
 
 Then use `tpch_order_line_sales_base` directly in Tableau. It flattens the
-`customer -> orders -> lineitem -> nation -> region` path into worksheet-ready
-fields while keeping the underlying QuantaStream schema normalized.
+`customer -> orders -> lineitem -> part -> nation -> region` path into
+worksheet-ready fields while keeping the underlying QuantaStream schema
+normalized.
+
+Avoid adding another physical table as a Tableau relationship from this curated
+view for now. Tableau may emit a `LEFT JOIN` from the view to that table, and
+QuantaStream currently supports only the inner relationship-vector join slice in
+that execution path. If a worksheet needs another dimension, add it to the
+curated view package first.
 
 ## Capture Template
 

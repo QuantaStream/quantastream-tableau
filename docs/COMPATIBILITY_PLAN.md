@@ -135,7 +135,25 @@ relationship-heavy datasets. The Tableau package now includes
 `queries/tpch_tableau_views.sql` plus matching YAML view definitions under
 `configuration/views/`. These install `q3_order_line_base` and
 `tpch_order_line_sales_base`, giving Tableau users a worksheet-ready TPC-H
-source without relying on JDBC relationship auto-discovery.
+source with customer, order, lineitem, region, and product fields without
+relying on JDBC relationship auto-discovery.
+
+One current engine limitation is worth keeping explicit: Tableau relationships
+from a curated view to another physical table can produce `LEFT JOIN` SQL, for
+example `tpch_order_line_sales_base LEFT JOIN part`. QuantaStream currently
+rejects that path with
+`relationship-vector graph execution only supports inner relationship-vector
+joins in this slice`. Until left joins are supported for this execution path,
+the preferred packaging approach is to include the required dimensions directly
+inside the curated view.
+
+That packaging choice is also reasonable from a performance perspective.
+QuantaStream prunes unused projected fields from the view expansion, and local
+TPC-H `.05` smoke checks showed no meaningful steady-state penalty when the
+view included product dimensions but the worksheet queried only customer region,
+market segment, and extended price. Join elimination for unused
+cardinality-preserving view joins remains useful future optimizer polish, but it
+is not required for the current Tableau packaging approach.
 
 ## Current Engine Replay Suites
 

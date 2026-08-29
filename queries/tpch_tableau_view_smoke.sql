@@ -1,4 +1,5 @@
 select
+  part_type,
   market_segment,
   customer_region,
   ship_mode,
@@ -7,7 +8,7 @@ select
   avg(discount) as avg_discount
 from tpch_order_line_sales_base
 where ship_date between todate('1995-03-15') and todate('1998-11-30')
-group by market_segment, customer_region, ship_mode
+group by part_type, market_segment, customer_region, ship_mode
 order by gross_sales desc
 limit 25;
 

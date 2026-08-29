@@ -106,6 +106,8 @@ This repository is new. The near-term path is practical and capture-driven:
 ## Current Tableau Notes
 
 - Use Tableau's generic JDBC connector with the MySQL Connector/J driver.
+- The current Windows smoke path used Oracle MySQL Connector/J `8.4.0`,
+  installed separately under `C:\Program Files\Tableau\Drivers`.
 - Manual relationships work. Automatic relationship inference is not expected
   in the current preview because Tableau's generic JDBC path reads table
   columns and primary keys but does not appear to request foreign-key discovery
@@ -117,6 +119,10 @@ This repository is new. The near-term path is practical and capture-driven:
   recreate the same relationship graph. This repository includes
   `queries/tpch_tableau_views.sql`, which installs `q3_order_line_base` and the
   wider `tpch_order_line_sales_base` view.
+- Do not model a Tableau relationship from a curated view to another physical
+  table yet. Tableau may emit a `LEFT JOIN` against the view, and QuantaStream's
+  current relationship-vector execution path only supports the inner-join slice
+  there. Add the needed fields to the curated view instead.
 - Keep `QUANTASTREAM_MYSQL_COMMAND_TRACE=true` enabled while capturing Tableau
   issues, then summarize or bundle the resulting QS trace log.
 

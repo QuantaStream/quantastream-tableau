@@ -30,6 +30,13 @@ select
   l.l_linenumber as line_number,
   l.l_partkey as part_key,
   l.l_suppkey as supplier_key,
+  p.p_name as part_name,
+  p.p_mfgr as part_manufacturer,
+  p.p_brand as part_brand,
+  p.p_type as part_type,
+  p.p_size as part_size,
+  p.p_container as part_container,
+  p.p_retailprice as part_retail_price,
   l.l_quantity as quantity,
   l.l_extendedprice as extended_price,
   l.l_discount as discount,
@@ -43,5 +50,6 @@ select
 from customer as c
 inner join orders as o on c.c_custkey = o.o_custkey
 inner join lineitem as l on o.o_orderkey = l.l_orderkey
+inner join part as p on l.l_partkey = p.p_partkey
 inner join nation as n on c.c_nationkey = n.n_nationkey
 inner join region as r on n.n_regionkey = r.r_regionkey;
