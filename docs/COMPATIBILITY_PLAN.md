@@ -184,10 +184,25 @@ Extract smoke:
 
 - engine replay now covers bounded extract-style probes in
   `mysql_compat_tableau_extract.yaml`;
-- create a small extract from `superstore_orders` in Tableau Desktop;
+- create a small extract from `superstore_orders` or a curated demo view in
+  Tableau Desktop;
 - capture real extract SQL and compare it to the bounded replay suite;
 - measure proxy memory and cancellation behavior;
 - document any first-release extract size guidance.
+
+Current result:
+
+- Tableau Desktop extract creation was validated through **Other Databases
+  (JDBC)** against a radiosport contest view.
+- The engine-side compatibility requirements identified by that pass are
+  `NOW()`/`CURRENT_TIMESTAMP()` scalar projection support and explicit UTC
+  server time-zone metadata: `@@system_time_zone=UTC` and `@@time_zone=+00:00`.
+- The validated trace shows Connector/J startup, metadata browsing, extract
+  scan/count queries, and worksheet queries returning successfully.
+- Non-blocking Tableau probes remain visible in traces: a synthetic one-column
+  `GROUP BY 2` capability check and `SHOW KEYS` against a view. Tableau
+  recovered from both in the smoke path, so they should become focused issues
+  only if they cause visible client failures.
 
 ## Later Work
 

@@ -192,6 +192,36 @@ Create these simple views:
 - top products by `sales`;
 - filters on `region`, `ship_mode`, and `order_date`.
 
+## Extract Smoke
+
+After the live worksheet path works, switch the Tableau data source from live
+mode to extract mode and create a small extract. The validated path uses the
+generic JDBC connector, MySQL Connector/J, and a JDBC URL with
+`serverTimezone=UTC`.
+
+Expected QS behavior:
+
+- Connector/J startup metadata returns successfully.
+- `SELECT NOW()` returns successfully.
+- `@@system_time_zone` reports `UTC`.
+- `@@time_zone` reports `+00:00`.
+- Tableau can run extract scan/count queries and build a worksheet from the
+  extract without a time-zone warning.
+
+If Tableau reports that the extract has a different time zone from the
+underlying server, confirm the QuantaStream engine includes the SQL
+`NOW()`/`CURRENT_TIMESTAMP()` and explicit UTC time-zone metadata fixes.
+
+The QS command trace may still show these non-blocking Tableau probes:
+
+- `SELECT SUBCOL AS COL FROM (SELECT 1 AS SUBCOL) SUBQUERY GROUP BY 2`
+  returning `GROUP BY ordinal is out of range`;
+- `SHOW KEYS FROM <view> FROM <schema>` returning view/index metadata as a
+  missing physical table.
+
+Those probes did not block the validated extract smoke. Treat them as new
+issues only if Tableau surfaces a visible failure.
+
 ## Relationship Checks
 
 Manual Tableau relationships work with QuantaStream today. Automatic

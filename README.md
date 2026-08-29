@@ -6,7 +6,7 @@ The first integration target is Tableau Desktop using Tableau's
 **Other Databases (JDBC)** path with the MySQL JDBC driver against the
 QuantaStream MySQL-compatible endpoint. The goal is to make Tableau connect,
 browse schemas, preview rows, run worksheets, exercise custom SQL, and
-eventually validate extract behavior against realistic QuantaStream data sets.
+validate extract behavior against realistic QuantaStream data sets.
 
 Do not use Tableau's built-in MySQL connector for the current preview loop.
 Use the generic JDBC connector and a MySQL JDBC URL instead.
@@ -123,6 +123,15 @@ This repository is new. The near-term path is practical and capture-driven:
   table yet. Tableau may emit a `LEFT JOIN` against the view, and QuantaStream's
   current relationship-vector execution path only supports the inner-join slice
   there. Add the needed fields to the curated view instead.
+- Tableau extract smoke has been validated through the generic JDBC path against
+  a radiosport contest view. The QuantaStream engine path requires SQL
+  `NOW()`/`CURRENT_TIMESTAMP()` support and explicit UTC metadata
+  (`@@system_time_zone=UTC`, `@@time_zone=+00:00`) so Tableau can compare
+  extract and server time zones without a client warning.
+- Current traces may contain non-blocking Tableau capability probes, including
+  a one-column synthetic query grouped by ordinal `2` and `SHOW KEYS` against a
+  view. Tableau recovers from both in the validated smoke path; file focused
+  issues only if either produces a visible user failure.
 - Keep `QUANTASTREAM_MYSQL_COMMAND_TRACE=true` enabled while capturing Tableau
   issues, then summarize or bundle the resulting QS trace log.
 
