@@ -1,22 +1,118 @@
 # QuantaStream Tableau
 
-This repository contains Tableau integration assets for QuantaStream.
+This repository is a Tableau integration lab for QuantaStream. You do not need
+this repository to use Tableau with QuantaStream.
 
-The first integration target is Tableau Desktop using Tableau's
-**Other Databases (JDBC)** path with the MySQL JDBC driver against the
-QuantaStream MySQL-compatible endpoint. The goal is to make Tableau connect,
-browse schemas, preview rows, run worksheets, exercise custom SQL, and
-validate extract behavior against realistic QuantaStream data sets.
+For ordinary Tableau Desktop usage, all you need is:
 
-Do not use Tableau's built-in MySQL connector for the current preview loop.
-Use the generic JDBC connector and a MySQL JDBC URL instead.
+- a running QuantaStream server;
+- Oracle MySQL Connector/J installed for Tableau;
+- Tableau's **Other Databases (JDBC)** connector;
+- a MySQL JDBC URL that points at QuantaStream's MySQL-compatible endpoint.
+
+The executable compatibility contract lives in the main QuantaStream repository
+under `sqlrunner/sqltests/mysql_compat_tableau_*.yaml`. This repository keeps
+optional integration assets: runbooks, sample schemas, sanitized Tableau SQL
+captures, helper scripts, and demo query/view packages.
+
+## Quick Connect
+
+1. Start QuantaStream with a MySQL-compatible endpoint, for example
+   `127.0.0.1:4000`.
+2. Install Oracle MySQL Connector/J for Tableau. The current Windows smoke path
+   used MySQL Connector/J `8.4.0` under:
+
+   ```text
+   C:\Program Files\Tableau\Drivers\mysql-connector-j-8.4.0.jar
+   ```
+
+3. Restart Tableau Desktop after installing the driver.
+4. In Tableau Desktop, choose **Other Databases (JDBC)**.
+5. Use one of these JDBC URLs:
+
+   ```text
+   jdbc:mysql://127.0.0.1:4000/quanta?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+   ```
+
+   If Tableau runs on Windows and QuantaStream runs inside WSL, use:
+
+   ```text
+   jdbc:mysql://wsl.localhost:4000/quanta?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+   ```
+
+6. Use your configured QuantaStream username, for example `qstream`.
+7. Select the `quanta` database, then choose a table or curated view.
+
+Do not use Tableau's built-in MySQL connector for the current preview path. The
+validated route is Tableau's generic JDBC connector plus MySQL Connector/J.
+
+## Load Sample Superstore
+
+Tableau's Sample Superstore is its familiar demo/training dataset. This repo
+does not vendor Tableau's original data, but it does provide a
+Superstore-compatible QuantaStream schema and loader scripts so you can load
+either:
+
+- your own exported Sample Superstore Orders CSV; or
+- the tiny synthetic Superstore-shaped CSV committed here for smoke testing.
+
+The schema is:
+
+```text
+configuration/superstore_orders/schema.yaml
+```
+
+For the simplest local source-tree loop, put the QuantaStream checkout beside
+this repo as `../quantastream`, then run:
+
+```bash
+SAMPLE_CSV=/path/to/sample-superstore-orders.csv \
+  BATCH_SIZE=1000 \
+  scripts/run_local_superstore_loop.sh
+```
+
+To use the committed synthetic smoke file instead:
+
+```bash
+scripts/run_local_superstore_loop.sh
+```
+
+That script starts QuantaStream, starts `qstream-loader`, loads the CSV into the
+`superstore_orders` table, and runs a small smoke query pack. After that,
+connect Tableau with the JDBC URL from the quick-connect section and choose
+`superstore_orders`.
+
+If QuantaStream and `qstream-loader` are already running, load a CSV directly:
+
+```bash
+scripts/load_superstore_csv.py \
+  -target http://127.0.0.1:8088/ingest/json \
+  -batch-size 1000 \
+  -workers 1 \
+  /path/to/sample-superstore-orders.csv
+```
+
+## When To Clone This Repo
+
+Clone this repository if you want to reproduce or extend the Tableau
+compatibility work: run the smoke runbooks, inspect sanitized Tableau SQL
+captures, install curated demo views, or contribute new Tableau-driven test
+cases back to QuantaStream.
+
+If you only want to connect Tableau to QuantaStream, start with the main
+QuantaStream repository and the quick-connect steps above.
 
 ## Current Focus
 
+This lab has two jobs:
+
+- keep Tableau-generated SQL captures and replay fixtures that help harden
+  QuantaStream's Tableau compatibility;
+- provide small examples, runbooks, and curated views for people who want to
+  reproduce the integration work.
+
 The first compliance-oriented target is Tableau's Sample Superstore data. That
-keeps the early work aligned with a dataset Tableau users already recognize,
-while QuantaStream's radiosport data remains a stronger showcase path for public
-dashboards and streaming/bitmap-native storytelling.
+keeps the early work aligned with a dataset Tableau users already recognize.
 
 Start here:
 
@@ -68,18 +164,21 @@ loop with connection, metadata, and worksheet queries.
 
 ## Scope
 
-Planned contents include:
+This repository may contain:
 
 - Tableau connection and smoke-test runbooks;
 - captured Tableau-generated SQL;
-- SQLRunner replay-suite notes for Tableau compatibility;
-- engine replay-suite runner for connect, metadata, worksheet, custom SQL, and extract smoke;
+- notes for SQLRunner replay suites that are promoted into the main
+  QuantaStream repository;
+- an engine replay-suite runner for connect, metadata, worksheet, custom SQL,
+  and extract smoke;
 - sample dashboards or workbook assets built from QuantaStream sample data;
 - Tableau Datasource Verification Tool notes and results;
 - connector experiments if a dedicated Tableau connector becomes useful later.
 
 This repository should not contain QuantaStream engine code, Tableau binaries,
-private customer data, or unsanitized connection logs.
+private customer data, unsanitized connection logs, or the canonical
+QuantaStream compatibility suites.
 
 ## Licensing
 
@@ -92,7 +191,8 @@ compatibility harnesses rather than the core database engine.
 
 ## Status
 
-This repository is new. The near-term path is practical and capture-driven:
+This repository is a companion lab. The near-term path is practical and
+capture-driven:
 
 1. Prepare and load Tableau Sample Superstore into QuantaStream.
 2. Connect Tableau Desktop through **Other Databases (JDBC)**.
@@ -123,8 +223,8 @@ This repository is new. The near-term path is practical and capture-driven:
   table yet. Tableau may emit a `LEFT JOIN` against the view, and QuantaStream's
   current relationship-vector execution path only supports the inner-join slice
   there. Add the needed fields to the curated view instead.
-- Tableau extract smoke has been validated through the generic JDBC path against
-  a radiosport contest view. The QuantaStream engine path requires SQL
+- Tableau extract smoke has been validated through the generic JDBC path. The
+  QuantaStream engine path requires SQL
   `NOW()`/`CURRENT_TIMESTAMP()` support and explicit UTC metadata
   (`@@system_time_zone=UTC`, `@@time_zone=+00:00`) so Tableau can compare
   extract and server time zones without a client warning.

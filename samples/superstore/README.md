@@ -1,9 +1,12 @@
 # Sample Superstore Data
 
-Use Tableau's Sample Superstore data as the first compliance-oriented Tableau
-target. This repository does not vendor Tableau sample data. Place a local copy
-here only for private/manual testing, or point loader scripts at the downloaded
-file path.
+Tableau's Sample Superstore is Tableau's common demo/training dataset. Use it
+as the first compliance-oriented Tableau target for QuantaStream.
+
+This repository does not vendor Tableau's original sample data. It provides a
+compatible QuantaStream schema, a tiny synthetic Superstore-shaped CSV, and
+loader scripts that can ingest either the synthetic file or your own exported
+Sample Superstore Orders CSV.
 
 Expected first target:
 
@@ -16,6 +19,27 @@ The first QuantaStream schema is `configuration/superstore_orders/schema.yaml`.
 It models the Orders table as a single analytical fact table so Tableau can
 exercise metadata, previews, filters, grouping, and aggregates without requiring
 a connector-specific join model on day one.
+
+## Quick Load
+
+From the repository root, with the QuantaStream source checkout beside this
+repository as `../quantastream`, run:
+
+```bash
+SAMPLE_CSV=/path/to/sample-superstore-orders.csv \
+  BATCH_SIZE=1000 \
+  scripts/run_local_superstore_loop.sh
+```
+
+To use the committed synthetic smoke file instead:
+
+```bash
+scripts/run_local_superstore_loop.sh
+```
+
+The loop starts QuantaStream, starts `qstream-loader`, loads
+`superstore_orders`, and runs smoke queries. Then connect Tableau through
+**Other Databases (JDBC)** and select the `superstore_orders` table.
 
 ## Loader Helpers
 

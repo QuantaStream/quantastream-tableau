@@ -20,6 +20,15 @@ loads the committed synthetic CSV, and runs the smoke SQL below. Override
 `QS_REPO`, `RUN_DIR`, `MYSQL_PORT`, `NATIVE_GRPC_PORT`, or `LOADER_LISTEN` if
 your local layout or ports differ.
 
+To load your own exported Tableau Sample Superstore Orders CSV instead of the
+synthetic file:
+
+```bash
+SAMPLE_CSV=/path/to/sample-superstore-orders.csv \
+  BATCH_SIZE=1000 \
+  scripts/run_local_superstore_loop.sh
+```
+
 ## 2. Manual Start Only
 
 To start just the local server and loader, then load data yourself:

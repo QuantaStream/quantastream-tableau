@@ -193,7 +193,7 @@ Extract smoke:
 Current result:
 
 - Tableau Desktop extract creation was validated through **Other Databases
-  (JDBC)** against a radiosport contest view.
+  (JDBC)**.
 - The engine-side compatibility requirements identified by that pass are
   `NOW()`/`CURRENT_TIMESTAMP()` scalar projection support and explicit UTC
   server time-zone metadata: `@@system_time_zone=UTC` and `@@time_zone=+00:00`.
@@ -212,6 +212,4 @@ Later work can include:
 - a dedicated Tableau connector package if the generic JDBC path needs richer
   metadata behavior, automatic relationship hints, or Tableau Exchange
   packaging;
-- Tableau Public dashboards built from exported QuantaStream snapshots;
-- radiosport demo workbooks that show QuantaStream's streaming and
-  bitmap-native strengths.
+- Tableau Public dashboards built from exported QuantaStream snapshots.
