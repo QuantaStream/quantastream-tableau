@@ -173,7 +173,9 @@ limit 20;
 
 5. Use the configured QuantaStream test user, for example `qstream`.
 6. Select the `quanta` database.
-7. Select `superstore_orders`.
+7. Select a curated Tableau-facing view when the dataset provides one. Use
+   `superstore_orders` for this single-table smoke because the bundled sample
+   does not require a relationship model.
 8. Preview rows.
 9. Create a worksheet.
 
@@ -228,6 +230,14 @@ Manual Tableau relationships work with QuantaStream today. Automatic
 relationship inference is not expected in the current preview. Tableau's
 generic JDBC path reads columns and primary keys from QuantaStream, then opens
 the relationship editor without requesting foreign-key discovery metadata.
+
+For normal user-facing workbooks, prefer a curated view that already exposes the
+required facts and dimensions. Give every projected field a unique,
+business-friendly name, expose natural keys rather than internal relationship
+identifiers, and keep the view contract stable as physical schemas change. This
+avoids duplicate-column alias problems and removes relationship inference from
+the workbook setup. Use physical tables primarily to validate migrations,
+troubleshoot metadata, or intentionally exercise manual relationship behavior.
 
 For a TPC-H relationship smoke, drag these tables onto the Tableau data source
 canvas and define the relationships manually:

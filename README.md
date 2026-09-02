@@ -46,6 +46,20 @@ captures, helper scripts, and demo query/view packages.
 Do not use Tableau's built-in MySQL connector for the current preview path. The
 validated route is Tableau's generic JDBC connector plus MySQL Connector/J.
 
+For production workbooks and reusable demos, prefer a curated QuantaStream view
+over modeling directly from physical tables. Views provide a stable Tableau
+contract with:
+
+- business-friendly field names;
+- no dependency on Tableau's relationship-inference behavior;
+- unique projected column names that avoid duplicate-column alias collisions;
+- natural business keys instead of internal relationship identifiers; and
+- simpler workbooks that are less sensitive to changes in the underlying table
+  schemas.
+
+Physical tables remain useful for migration validation, troubleshooting, and
+advanced users who deliberately want to construct their own Tableau data model.
+
 ## Load Sample Superstore
 
 Tableau's Sample Superstore is its familiar demo/training dataset. This repo
@@ -215,8 +229,11 @@ capture-driven:
 - For TPC-H relationship tests, define relationships manually, for example
   `customer.c_custkey = orders.o_custkey` and
   `orders.o_orderkey = lineitem.l_orderkey`.
-- For a smoother Tableau package, prefer curated views over asking users to
-  recreate the same relationship graph. This repository includes
+- Treat curated views as the recommended Tableau-facing analytics contract.
+  They provide stable business names, avoid dependence on relationship
+  inference and duplicate-column aliases, expose natural keys instead of
+  internal relationship identifiers, and keep workbooks simpler when physical
+  schemas evolve. This repository includes
   `queries/tpch_tableau_views.sql`, which installs `q3_order_line_base` and the
   wider `tpch_order_line_sales_base` view.
 - Do not model a Tableau relationship from a curated view to another physical

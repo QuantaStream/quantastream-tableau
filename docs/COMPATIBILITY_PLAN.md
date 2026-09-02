@@ -138,6 +138,21 @@ relationship-heavy datasets. The Tableau package now includes
 source with customer, order, lineitem, region, and product fields without
 relying on JDBC relationship auto-discovery.
 
+Curated views should be treated as the supported Tableau analytics contract,
+not merely as a relationship workaround. A published view should:
+
+- expose stable, business-friendly field names;
+- use unique projected names so Tableau does not need duplicate-column aliases;
+- expose natural business keys rather than internal relationship identifiers;
+- shield workbooks from reasonable changes to the underlying physical schemas;
+  and
+- keep the Tableau data model simple enough for users to begin analysis without
+  reconstructing database relationships.
+
+Physical tables remain available for migration validation, diagnostics, and
+advanced modeling. A Tableau package should lead with curated views and document
+physical-table modeling as the lower-level option.
+
 One current engine limitation is worth keeping explicit: Tableau relationships
 from a curated view to another physical table can produce `LEFT JOIN` SQL, for
 example `tpch_order_line_sales_base LEFT JOIN part`. QuantaStream currently
